@@ -122,6 +122,8 @@ CSRC = $(STARTUPSRC) \
        shell/shellcommands.c \
        shell/cmd_reboot.c \
        shell/cmd_led.c \
+       shell/cmd_motor.c \
+       stepper.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global

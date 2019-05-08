@@ -8,6 +8,7 @@
 
 #include "helpers.h"
 #include "shellcommands.h"
+#include "stepper.h"
 
 int main(void)
 {
@@ -26,6 +27,7 @@ int main(void)
     PRINT("\n\r\n\r");
 
 //    initSpi();
+    initStepper();
 
     shellInit();
     chThdCreateFromHeap(NULL, SHELL_WA_SIZE, "shell", NORMALPRIO + 1, shellThread, (void *)&shell_cfg_uart);

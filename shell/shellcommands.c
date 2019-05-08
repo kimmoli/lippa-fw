@@ -8,6 +8,7 @@ const ShellCommand commands[] =
 {
     { "reboot",  cmd_reboot },
     { "led",     cmd_led },
+    { "mot",     cmd_motor },
     {NULL, NULL}
 };
 
