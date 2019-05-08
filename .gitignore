@@ -1,0 +1,11 @@
+.dep/
+build/
+*.pro
+*.pro.*
+.project
+.cproject
+.metadata/
+.settings/
+
+
+
