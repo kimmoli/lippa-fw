@@ -2,7 +2,7 @@
 #define IOMAP_H
 /*
  * IO pins assignments.
- * Generated with ELSI Version: 2019.18 STM32 Pinmap tool.
+ * Generated with ELSI Version: 2019.19 STM32 Pinmap tool.
  */
 #define GPIOA_PA0_NC                          0U
 #define GPIOA_PA1_SPI_CS_PS2_N                1U
@@ -1386,7 +1386,7 @@
                                      PIN_AFIO_AF_5(GPIOB_PB5_SPI1MOSI) | \
                                      PIN_AFIO_AF_0(GPIOB_PB6_NC) | \
                                      PIN_AFIO_AF_0(GPIOB_PB7_NC))
-#define VAL_GPIOB_AFRH              (PIN_AFIO_AF_2(GPIOB_PB8_PULSE_4) | \
+#define VAL_GPIOB_AFRH              (PIN_AFIO_AF_3(GPIOB_PB8_PULSE_4) | \
                                      PIN_AFIO_AF_0(GPIOB_PB9_NC) | \
                                      PIN_AFIO_AF_0(GPIOB_PB10_NC) | \
                                      PIN_AFIO_AF_0(GPIOB_PB11_NC) | \
