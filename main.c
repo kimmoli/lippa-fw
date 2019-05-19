@@ -9,6 +9,7 @@
 #include "helpers.h"
 #include "shellcommands.h"
 #include "stepper.h"
+#include "servo.h"
 
 int main(void)
 {
@@ -28,6 +29,7 @@ int main(void)
 
 //    initSpi();
     initStepper();
+    initServo();
 
     shellInit();
     chThdCreateFromHeap(NULL, SHELL_WA_SIZE, "shell", NORMALPRIO + 1, shellThread, (void *)&shell_cfg_uart);
