@@ -124,10 +124,12 @@ CSRC = $(STARTUPSRC) \
        shell/cmd_led.c \
        shell/cmd_motor.c \
        shell/cmd_servo.c \
+       shell/cmd_lidar.c \
        stepper.c \
        servo.c \
        spi.c \
        ps2.c \
+       lidar.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global

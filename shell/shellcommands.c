@@ -10,6 +10,7 @@ const ShellCommand commands[] =
     { "led",     cmd_led },
     { "mot",     cmd_motor },
     { "ser",     cmd_servo },
+    { "lidar",   cmd_lidar },
     {NULL, NULL}
 };
 

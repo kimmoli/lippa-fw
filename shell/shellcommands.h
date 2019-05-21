@@ -10,6 +10,7 @@ extern void cmd_reboot(BaseSequentialStream *chp, int argc, char *argv[]);
 extern void cmd_led(BaseSequentialStream *chp, int argc, char *argv[]);
 extern void cmd_motor(BaseSequentialStream *chp, int argc, char *argv[]);
 extern void cmd_servo(BaseSequentialStream *chp, int argc, char *argv[]);
+extern void cmd_lidar(BaseSequentialStream *chp, int argc, char *argv[]);
 
 extern const ShellCommand commands[];
 extern const ShellConfig shell_cfg_uart;
