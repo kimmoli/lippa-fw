@@ -22,46 +22,46 @@ void cmd_motor(BaseSequentialStream *chp, int argc, char *argv[])
 
         if (strcmp(argv[1], "en") == 0)
         {
-            if (motor == 1)
+            if (motor == 1 || motor == 0)
                 palToggleLine(LINE_ENA_1_N);
-            else if (motor == 2)
+            if (motor == 2 || motor == 0)
                 palToggleLine(LINE_ENA_2_N);
-            else if (motor == 3)
+            if (motor == 3 || motor == 0)
                 palToggleLine(LINE_ENA_3_N);
-            else if (motor == 4)
+            if (motor == 4 || motor == 0)
                 palToggleLine(LINE_ENA_4_N);
         }
         else if (strcmp(argv[1], "dir") == 0)
         {
-            if (motor == 1)
-                palToggleLine(LINE_DIR_1);
-            else if (motor == 2)
-                palToggleLine(LINE_DIR_2);
-            else if (motor == 3)
-                palToggleLine(LINE_DIR_3);
-            else if (motor == 4)
-                palToggleLine(LINE_DIR_4);
+            if (motor == 1 || motor == 0)
+                setStepperDirection(&STEPPERD1, DIR_TOGGLE);
+            if (motor == 2 || motor == 0)
+                setStepperDirection(&STEPPERD2, DIR_TOGGLE);
+            if (motor == 3 || motor == 0)
+                setStepperDirection(&STEPPERD3, DIR_TOGGLE);
+            if (motor == 4 || motor == 0)
+                setStepperDirection(&STEPPERD4, DIR_TOGGLE);
         }
         else if (strcmp(argv[1], "mode") == 0)
         {
-            if (motor == 1)
+            if (motor == 1 || motor == 0)
                 palToggleLine(LINE_MODE_1);
-            else if (motor == 2)
+            if (motor == 2 || motor == 0)
                 palToggleLine(LINE_MODE_2);
-            else if (motor == 3)
+            if (motor == 3 || motor == 0)
                 palToggleLine(LINE_MODE_3);
-            else if (motor == 4)
+            if (motor == 4 || motor == 0)
                 palToggleLine(LINE_MODE_4);
         }
         else if (strcmp(argv[1], "set") == 0 && argc == 3)
         {
-            if (motor == 1)
+            if (motor == 1 || motor == 0)
                 setStepper(&STEPPERD1, strtol(argv[2], NULL, 10), DIR_RETAIN);
-            else if (motor == 2)
+            if (motor == 2 || motor == 0)
                 setStepper(&STEPPERD2, strtol(argv[2], NULL, 10), DIR_RETAIN);
-            else if (motor == 3)
+            if (motor == 3 || motor == 0)
                 setStepper(&STEPPERD3, strtol(argv[2], NULL, 10), DIR_RETAIN);
-            else if (motor == 4)
+            if (motor == 4 || motor == 0)
                 setStepper(&STEPPERD4, strtol(argv[2], NULL, 10), DIR_RETAIN);
         }
     }

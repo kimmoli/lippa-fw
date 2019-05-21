@@ -10,6 +10,7 @@ struct StepperDriver
     uint32_t currentDirection;
     uint32_t setDirection;
     bool noAccel;
+    bool invertDirection;
 };
 
 typedef struct StepperDriver StepperDriver;
@@ -21,6 +22,7 @@ extern StepperDriver STEPPERD4;
 
 #define DIR_CW     PAL_LOW
 #define DIR_CCW    PAL_HIGH
+#define DIR_TOGGLE 8U
 #define DIR_RETAIN 9U
 
 #define RATIOD1 15
@@ -28,10 +30,15 @@ extern StepperDriver STEPPERD4;
 #define RATIOD3 15
 #define RATIOD4 15
 
+#define STEPPER_UPDATE_INTERVAL 10
+#define STEPPER_ACCEL 30
+#define STEPPER_DECEL 300
+
 extern StepperDriver *steppers[4];
 
 extern void initStepper(void);
 extern void setStepper(StepperDriver *stepp, int32_t frequency, uint32_t direction);
+extern void setStepperDirection(StepperDriver *stepp, uint32_t direction);
 
 #endif
 

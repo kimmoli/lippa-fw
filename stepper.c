@@ -2,10 +2,6 @@
 #include "stepper.h"
 #include "helpers.h"
 
-#define STEPPER_UPDATE_INTERVAL 5
-#define STEPPER_ACCEL 100
-#define STEPPER_DECEL 500
-
 virtual_timer_t stepperVt;
 event_source_t stepperPoll;
 
@@ -75,7 +71,7 @@ static THD_FUNCTION(stepperThread, arg)
                 steppers[i]->currentFrequency = steppers[i]->setFrequency;
             }
 
-            if (steppers[i]->currentFrequency == 0)
+            if (steppers[i]->currentFrequency == 0 && steppers[i]->setDirection != DIR_RETAIN)
             {
                 steppers[i]->currentDirection = steppers[i]->setDirection;
             }
@@ -108,6 +104,25 @@ void stepperVtCb(void *p)
 void setStepper(StepperDriver *stepp, int32_t frequency, uint32_t direction)
 {
     stepp->setFrequency = frequency;
+
+    setStepperDirection(stepp, direction);
+}
+
+void setStepperDirection(StepperDriver *stepp, uint32_t direction)
+{
+    if (stepp->invertDirection && direction == DIR_CW)
+        direction = DIR_CCW;
+    else if (stepp->invertDirection && direction == DIR_CCW)
+        direction = DIR_CW;
+
+    if (direction == DIR_TOGGLE)
+    {
+        if (stepp->currentDirection == DIR_CCW)
+            direction = DIR_CW;
+        else if (stepp->currentDirection == DIR_CW)
+            direction = DIR_CCW;
+    }
+
     stepp->setDirection = direction;
 }
 
@@ -162,37 +177,41 @@ void initStepper(void)
     STEPPERD1.pwmp = &PWMD4;
     STEPPERD1.directionLine = LINE_DIR_1;
     STEPPERD1.currentFrequency = 0;
-    STEPPERD1.currentDirection = DIR_RETAIN;
+    STEPPERD1.currentDirection = DIR_CW;
     STEPPERD1.setFrequency = 0;
-    STEPPERD1.setDirection = DIR_RETAIN;
+    STEPPERD1.setDirection = DIR_CW;
     STEPPERD1.noAccel = false;
+    STEPPERD1.invertDirection = false;
     startStepper(&STEPPERD1);
 
     STEPPERD2.pwmp = &PWMD8;
     STEPPERD2.directionLine = LINE_DIR_2;
     STEPPERD2.currentFrequency = 0;
-    STEPPERD2.currentDirection = DIR_RETAIN;
+    STEPPERD2.currentDirection = DIR_CW;
     STEPPERD2.setFrequency = 0;
-    STEPPERD2.setDirection = DIR_RETAIN;
+    STEPPERD2.setDirection = DIR_CW;
     STEPPERD2.noAccel = false;
+    STEPPERD2.invertDirection = false;
     startStepper(&STEPPERD2);
 
     STEPPERD3.pwmp = &PWMD9;
     STEPPERD3.directionLine = LINE_DIR_3;
     STEPPERD3.currentFrequency = 0;
-    STEPPERD3.currentDirection = DIR_RETAIN;
+    STEPPERD3.currentDirection = DIR_CCW;
     STEPPERD3.setFrequency = 0;
-    STEPPERD3.setDirection = DIR_RETAIN;
+    STEPPERD3.setDirection = DIR_CW;
     STEPPERD3.noAccel = false;
+    STEPPERD3.invertDirection = true;
     startStepper(&STEPPERD3);
 
     STEPPERD4.pwmp = &PWMD10;
     STEPPERD4.directionLine = LINE_DIR_4;
     STEPPERD4.currentFrequency = 0;
-    STEPPERD4.currentDirection = DIR_RETAIN;
+    STEPPERD4.currentDirection = DIR_CCW;
     STEPPERD4.setFrequency = 0;
-    STEPPERD4.setDirection = DIR_RETAIN;
+    STEPPERD4.setDirection = DIR_CW;
     STEPPERD4.noAccel = false;
+    STEPPERD4.invertDirection = true;
     startStepper(&STEPPERD4);
 
     steppers[0] = &STEPPERD1;
