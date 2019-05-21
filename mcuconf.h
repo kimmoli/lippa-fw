@@ -136,7 +136,7 @@
 #define STM32_GPT_USE_TIM8                  FALSE
 #define STM32_GPT_USE_TIM9                  FALSE
 #define STM32_GPT_USE_TIM11                 FALSE
-#define STM32_GPT_USE_TIM12                 FALSE
+#define STM32_GPT_USE_TIM12                 TRUE
 #define STM32_GPT_USE_TIM14                 FALSE
 #define STM32_GPT_TIM1_IRQ_PRIORITY         7
 #define STM32_GPT_TIM2_IRQ_PRIORITY         7
@@ -267,9 +267,9 @@
 /*
  * SPI driver system settings.
  */
-#define STM32_SPI_USE_SPI1                  FALSE
+#define STM32_SPI_USE_SPI1                  TRUE
 #define STM32_SPI_USE_SPI2                  FALSE
-#define STM32_SPI_USE_SPI3                  TRUE
+#define STM32_SPI_USE_SPI3                  FALSE
 #define STM32_SPI_SPI1_RX_DMA_STREAM        STM32_DMA_STREAM_ID(2, 0)
 #define STM32_SPI_SPI1_TX_DMA_STREAM        STM32_DMA_STREAM_ID(2, 3)
 #define STM32_SPI_SPI2_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 3)

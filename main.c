@@ -10,6 +10,8 @@
 #include "shellcommands.h"
 #include "stepper.h"
 #include "servo.h"
+#include "spi.h"
+#include "ps2.h"
 
 int main(void)
 {
@@ -27,7 +29,8 @@ int main(void)
     PRINT("\n\r-----");
     PRINT("\n\r\n\r");
 
-//    initSpi();
+    initSpi();
+    initPS2();
     initStepper();
     initServo();
 

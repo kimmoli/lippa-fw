@@ -126,6 +126,8 @@ CSRC = $(STARTUPSRC) \
        shell/cmd_servo.c \
        stepper.c \
        servo.c \
+       spi.c \
+       ps2.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global

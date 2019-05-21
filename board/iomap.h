@@ -2,7 +2,7 @@
 #define IOMAP_H
 /*
  * IO pins assignments.
- * Generated with ELSI Version: 2019.19 STM32 Pinmap tool.
+ * Generated with ELSI Version: 2019.20 STM32 Pinmap tool.
  */
 #define GPIOA_PA0_NC                          0U
 #define GPIOA_PA1_SPI_CS_PS2_N                1U
@@ -23,8 +23,8 @@
 #define GPIOB_PB0_SERVO_PWM_3                 0U
 #define GPIOB_PB1_NC                          1U
 #define GPIOB_PB2_NC                          2U
-#define GPIOB_PB3_NC                          3U
-#define GPIOB_PB4_NC                          4U
+#define GPIOB_PB3_SPI1CLK                     3U
+#define GPIOB_PB4_SPI1MISO                    4U
 #define GPIOB_PB5_SPI1MOSI                    5U
 #define GPIOB_PB6_NC                          6U
 #define GPIOB_PB7_NC                          7U
@@ -192,6 +192,8 @@
 #define LINE_USB_DM                           PAL_LINE(GPIOA, 11U)
 #define LINE_USB_DP                           PAL_LINE(GPIOA, 12U)
 #define LINE_SERVO_PWM_3                      PAL_LINE(GPIOB, 0U)
+#define LINE_SPI1CLK                          PAL_LINE(GPIOB, 3U)
+#define LINE_SPI1MISO                         PAL_LINE(GPIOB, 4U)
 #define LINE_SPI1MOSI                         PAL_LINE(GPIOB, 5U)
 #define LINE_PULSE_4                          PAL_LINE(GPIOB, 8U)
 #define LINE_PULSE_2                          PAL_LINE(GPIOC, 6U)
@@ -281,8 +283,8 @@
 #define VAL_GPIOB_MODER             (PIN_MODE_ALTERNATE(GPIOB_PB0_SERVO_PWM_3) | \
                                      PIN_MODE_INPUT(GPIOB_PB1_NC) | \
                                      PIN_MODE_INPUT(GPIOB_PB2_NC) | \
-                                     PIN_MODE_INPUT(GPIOB_PB3_NC) | \
-                                     PIN_MODE_INPUT(GPIOB_PB4_NC) | \
+                                     PIN_MODE_ALTERNATE(GPIOB_PB3_SPI1CLK) | \
+                                     PIN_MODE_ALTERNATE(GPIOB_PB4_SPI1MISO) | \
                                      PIN_MODE_ALTERNATE(GPIOB_PB5_SPI1MOSI) | \
                                      PIN_MODE_INPUT(GPIOB_PB6_NC) | \
                                      PIN_MODE_INPUT(GPIOB_PB7_NC) | \
@@ -501,8 +503,8 @@
 #define VAL_GPIOB_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOB_PB0_SERVO_PWM_3) | \
                                      PIN_OTYPE_PUSHPULL(GPIOB_PB1_NC) | \
                                      PIN_OTYPE_PUSHPULL(GPIOB_PB2_NC) | \
-                                     PIN_OTYPE_PUSHPULL(GPIOB_PB3_NC) | \
-                                     PIN_OTYPE_PUSHPULL(GPIOB_PB4_NC) | \
+                                     PIN_OTYPE_PUSHPULL(GPIOB_PB3_SPI1CLK) | \
+                                     PIN_OTYPE_PUSHPULL(GPIOB_PB4_SPI1MISO) | \
                                      PIN_OTYPE_PUSHPULL(GPIOB_PB5_SPI1MOSI) | \
                                      PIN_OTYPE_PUSHPULL(GPIOB_PB6_NC) | \
                                      PIN_OTYPE_PUSHPULL(GPIOB_PB7_NC) | \
@@ -721,8 +723,8 @@
 #define VAL_GPIOB_OSPEEDR           (PIN_OSPEED_LOW(GPIOB_PB0_SERVO_PWM_3) | \
                                      PIN_OSPEED_LOW(GPIOB_PB1_NC) | \
                                      PIN_OSPEED_LOW(GPIOB_PB2_NC) | \
-                                     PIN_OSPEED_LOW(GPIOB_PB3_NC) | \
-                                     PIN_OSPEED_LOW(GPIOB_PB4_NC) | \
+                                     PIN_OSPEED_LOW(GPIOB_PB3_SPI1CLK) | \
+                                     PIN_OSPEED_LOW(GPIOB_PB4_SPI1MISO) | \
                                      PIN_OSPEED_LOW(GPIOB_PB5_SPI1MOSI) | \
                                      PIN_OSPEED_LOW(GPIOB_PB6_NC) | \
                                      PIN_OSPEED_LOW(GPIOB_PB7_NC) | \
@@ -941,8 +943,8 @@
 #define VAL_GPIOB_ODR               (PIN_ODR_HIGH(GPIOB_PB0_SERVO_PWM_3) | \
                                      PIN_ODR_HIGH(GPIOB_PB1_NC) | \
                                      PIN_ODR_HIGH(GPIOB_PB2_NC) | \
-                                     PIN_ODR_HIGH(GPIOB_PB3_NC) | \
-                                     PIN_ODR_HIGH(GPIOB_PB4_NC) | \
+                                     PIN_ODR_HIGH(GPIOB_PB3_SPI1CLK) | \
+                                     PIN_ODR_HIGH(GPIOB_PB4_SPI1MISO) | \
                                      PIN_ODR_HIGH(GPIOB_PB5_SPI1MOSI) | \
                                      PIN_ODR_HIGH(GPIOB_PB6_NC) | \
                                      PIN_ODR_HIGH(GPIOB_PB7_NC) | \
@@ -1161,8 +1163,8 @@
 #define VAL_GPIOB_PUPDR             (PIN_PUPDR_FLOATING(GPIOB_PB0_SERVO_PWM_3) | \
                                      PIN_PUPDR_PULLUP(GPIOB_PB1_NC) | \
                                      PIN_PUPDR_PULLUP(GPIOB_PB2_NC) | \
-                                     PIN_PUPDR_PULLUP(GPIOB_PB3_NC) | \
-                                     PIN_PUPDR_PULLUP(GPIOB_PB4_NC) | \
+                                     PIN_PUPDR_PULLUP(GPIOB_PB3_SPI1CLK) | \
+                                     PIN_PUPDR_PULLUP(GPIOB_PB4_SPI1MISO) | \
                                      PIN_PUPDR_FLOATING(GPIOB_PB5_SPI1MOSI) | \
                                      PIN_PUPDR_PULLUP(GPIOB_PB6_NC) | \
                                      PIN_PUPDR_PULLUP(GPIOB_PB7_NC) | \
@@ -1381,8 +1383,8 @@
 #define VAL_GPIOB_AFRL              (PIN_AFIO_AF_2(GPIOB_PB0_SERVO_PWM_3) | \
                                      PIN_AFIO_AF_0(GPIOB_PB1_NC) | \
                                      PIN_AFIO_AF_0(GPIOB_PB2_NC) | \
-                                     PIN_AFIO_AF_0(GPIOB_PB3_NC) | \
-                                     PIN_AFIO_AF_0(GPIOB_PB4_NC) | \
+                                     PIN_AFIO_AF_5(GPIOB_PB3_SPI1CLK) | \
+                                     PIN_AFIO_AF_5(GPIOB_PB4_SPI1MISO) | \
                                      PIN_AFIO_AF_5(GPIOB_PB5_SPI1MOSI) | \
                                      PIN_AFIO_AF_0(GPIOB_PB6_NC) | \
                                      PIN_AFIO_AF_0(GPIOB_PB7_NC))
