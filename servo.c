@@ -59,8 +59,6 @@ void initServo(void)
     SERVOD3.channel = 2;
     SERVOD3.value = 1500;
 
-    palClearLine(LINE_ENABLE_PWM_N);
-
     updateServo(&SERVOD1);
     updateServo(&SERVOD2);
     updateServo(&SERVOD3);

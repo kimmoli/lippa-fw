@@ -7,20 +7,16 @@
 
 void cmd_lidar(BaseSequentialStream *chp, int argc, char *argv[])
 {
-    uint8_t buf[1];
-
     if (argc == 1)
     {
         if (strcmp(argv[0], "ena") == 0)
         {
-            buf[0] = 'b';
-            lidarTransmit(1, buf);
+            controlLidar(true);
             return;
         }
         else if (strcmp(argv[0], "dis") == 0)
         {
-            buf[0] = 'e';
-            lidarTransmit(1, buf);
+            controlLidar(false);
             return;
         }
     }

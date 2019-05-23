@@ -25,10 +25,10 @@ extern StepperDriver STEPPERD4;
 #define DIR_TOGGLE 8U
 #define DIR_RETAIN 9U
 
-#define RATIOD1 15
-#define RATIOD2 15
-#define RATIOD3 15
-#define RATIOD4 15
+#define RATIOD1 25
+#define RATIOD2 25
+#define RATIOD3 25
+#define RATIOD4 25
 
 #define STEPPER_UPDATE_INTERVAL 10
 #define STEPPER_ACCEL 30

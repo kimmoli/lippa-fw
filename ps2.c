@@ -2,12 +2,17 @@
 #include "ps2.h"
 #include "stepper.h"
 #include "servo.h"
+#include "lidar.h"
 #include <stdlib.h>
 #include "helpers.h"
+
+#define RATIO_STEPPER 25
+#define RATIO_SERVO 2
 
 PS2Values_t *PS2Values;
 event_source_t PS2Poll;
 static uint8_t rx[100] = {0};
+static bool lidarState = false;
 
 //uint8_t poll[]={0x01,0x42,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 uint8_t poll[]={0x01,0x42,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
@@ -113,6 +118,22 @@ static THD_FUNCTION(PS2Thread, arg)
             if (!start)
             {
                 start = true;
+
+                palToggleLine(LINE_ENA_1_N);
+                palToggleLine(LINE_ENA_2_N);
+                palToggleLine(LINE_ENA_3_N);
+                palToggleLine(LINE_ENA_4_N);
+                palToggleLine(LINE_SLEEP_N);
+
+                SERVOD1.value = 1500;
+                SERVOD2.value = 1500;
+
+                updateServo(&SERVOD1);
+                updateServo(&SERVOD2);
+
+                chThdSleepMilliseconds(100);
+
+                palToggleLine(LINE_ENABLE_PWM_N);
             }
         }
         else
@@ -126,6 +147,10 @@ static THD_FUNCTION(PS2Thread, arg)
             if (!sel)
             {
                 sel = true;
+
+                lidarState = !lidarState;
+
+                controlLidar(lidarState);
             }
         }
         else
@@ -133,29 +158,46 @@ static THD_FUNCTION(PS2Thread, arg)
             sel = false;
         }
 
-        if (PS2Values->buttons & BUTTON_LEFT)
+        if (PS2Values->buttons & BUTTON_UP && LIDARD1.distance[2] > 200)
         {
-            setStepper(&STEPPERD1, RATIOD1 * PS2Values->pressure_left, DIR_CCW);
+            setStepper(&STEPPERD1, RATIO_STEPPER * PS2Values->pressure_up + MAX(1500 - SERVOD1.value, 0), DIR_CCW);
+            setStepper(&STEPPERD2, RATIO_STEPPER * PS2Values->pressure_up + MAX(1500 - SERVOD1.value, 0), DIR_CCW);
+            setStepper(&STEPPERD3, RATIO_STEPPER * PS2Values->pressure_up + MAX(SERVOD1.value - 1500, 0), DIR_CCW);
+            setStepper(&STEPPERD4, RATIO_STEPPER * PS2Values->pressure_up + MAX(SERVOD1.value - 1500, 0), DIR_CCW);
         }
-        else if (PS2Values->buttons & BUTTON_RIGHT)
+        else if (PS2Values->buttons & BUTTON_DOWN && LIDARD1.distance[0] > 200)
         {
-            setStepper(&STEPPERD1, RATIOD1 * PS2Values->pressure_right, DIR_CW);
+            setStepper(&STEPPERD1, RATIO_STEPPER * PS2Values->pressure_down + MAX(1500 - SERVOD1.value, 0), DIR_CW);
+            setStepper(&STEPPERD2, RATIO_STEPPER * PS2Values->pressure_down + MAX(1500 - SERVOD1.value, 0), DIR_CW);
+            setStepper(&STEPPERD3, RATIO_STEPPER * PS2Values->pressure_down + MAX(SERVOD1.value - 1500, 0), DIR_CW);
+            setStepper(&STEPPERD4, RATIO_STEPPER * PS2Values->pressure_down + MAX(SERVOD1.value - 1500, 0), DIR_CW);
         }
         else
         {
             setStepper(&STEPPERD1, 0, DIR_RETAIN);
+            setStepper(&STEPPERD2, 0, DIR_RETAIN);
+            setStepper(&STEPPERD3, 0, DIR_RETAIN);
+            setStepper(&STEPPERD4, 0, DIR_RETAIN);
         }
 
-        if (PS2Values->buttons & BUTTON_R1)
+        if (PS2Values->buttons & BUTTON_SQUARE)
         {
-            SERVOD1.value += 5;
+            SERVOD1.value = 1500 - MAX(0, PS2Values->pressure_square - 100) * RATIO_SERVO;
+            SERVOD2.value = 1500 + MAX(0, PS2Values->pressure_square - 100)* RATIO_SERVO;
         }
-        else if (PS2Values->buttons & BUTTON_R2)
+        else if (PS2Values->buttons & BUTTON_CIRCLE)
         {
-            SERVOD1.value -= 5;
+            SERVOD1.value = 1500 + MAX(0, PS2Values->pressure_circle - 100) * RATIO_SERVO;
+            SERVOD2.value = 1500 - MAX(0, PS2Values->pressure_circle - 100) * RATIO_SERVO;
+        }
+        else
+        {
+            SERVOD1.value = 1500;
+            SERVOD2.value = 1500;
         }
 
         updateServo(&SERVOD1);
+        updateServo(&SERVOD2);
     }
 
     chThdExit(MSG_OK);

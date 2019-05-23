@@ -4,6 +4,8 @@
 #include "helpers.h"
 #include "lidar.h"
 
+LidarDriver LIDARD1;
+
 static void lidarRxEnd(UARTDriver *uartp);
 static uint8_t rxBuf[42];
 event_source_t lidarEvent;
@@ -44,25 +46,25 @@ static THD_FUNCTION(lidarThread, arg)
     {
         chEvtWaitOne(EVENT_MASK(8));
 
-        palToggleLine(LINE_LED_DEBUG);
-
         if (rxBuf[0] == 0xFA) // SYNC
         {
             if (rxBuf[1] == 0xA0) // Angle index 0
             {
-                PRINT("%5d ", (rxBuf[7] << 8) | rxBuf[6]);
+                palToggleLine(LINE_LED_DEBUG);
+
+                LIDARD1.distance[0] = (rxBuf[7] << 8) | rxBuf[6];
             }
             if (rxBuf[1] == 0xAF) // Angle index 15
             {
-                PRINT("%5d ", (rxBuf[7] << 8) | rxBuf[6]);
+                LIDARD1.distance[1] = (rxBuf[7] << 8) | rxBuf[6];
             }
             if (rxBuf[1] == 0xBE) // Angle index 30
             {
-                PRINT("%5d ", (rxBuf[7] << 8) | rxBuf[6]);
+                LIDARD1.distance[2] = (rxBuf[7] << 8) | rxBuf[6];
             }
             if (rxBuf[1] == 0xCD) // Angle index 45
             {
-                PRINT("%5d\r\n", (rxBuf[7] << 8) | rxBuf[6]);
+                LIDARD1.distance[3] = (rxBuf[7] << 8) | rxBuf[6];
             }
         }
 
@@ -72,8 +74,25 @@ static THD_FUNCTION(lidarThread, arg)
     chThdExit(MSG_OK);
 }
 
+void controlLidar(bool enable)
+{
+    uint8_t buf[1];
+
+    if (enable)
+        buf[0] = 'b';
+    else
+        buf[0] = 'e';
+
+    lidarTransmit(1, buf);
+}
+
 void initLidar(void)
 {
+    LIDARD1.distance[0] = 0xffff;
+    LIDARD1.distance[1] = 0xffff;
+    LIDARD1.distance[2] = 0xffff;
+    LIDARD1.distance[3] = 0xffff;
+
     uartStart(&UARTD1, &lidarConfig);
 
     chEvtObjectInit(&lidarEvent);
