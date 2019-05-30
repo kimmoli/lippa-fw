@@ -13,6 +13,7 @@
 #include "spi.h"
 #include "ps2.h"
 #include "lidar.h"
+#include "autodrive.h"
 
 int main(void)
 {
@@ -35,6 +36,7 @@ int main(void)
     initStepper();
     initServo();
     initLidar();
+    initAutodrive();
 
     shellInit();
     chThdCreateFromHeap(NULL, SHELL_WA_SIZE, "shell", NORMALPRIO + 1, shellThread, (void *)&shell_cfg_uart);

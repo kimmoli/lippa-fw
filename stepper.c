@@ -41,35 +41,43 @@ static THD_FUNCTION(stepperThread, arg)
     event_listener_t elStepper;
     chEvtRegister(&stepperPoll, &elStepper, 8);
 
+    int32_t nextFreq = 0;
+    int32_t targetFreq = 0;
+
     while (!chThdShouldTerminateX())
     {
         chEvtWaitOne(EVENT_MASK(8));
 
         for (int i=0 ; i<4 ; i++)
         {
-            // If direction changed, force speed to 0 until direction
             if (steppers[i]->setDirection != DIR_RETAIN &&
                 steppers[i]->setDirection != steppers[i]->currentDirection)
             {
-                steppers[i]->setFrequency = 0;
+                targetFreq = 0;
+            }
+            else
+            {
+                targetFreq = steppers[i]->setFrequency;
             }
 
             if (steppers[i]->noAccel)
             {
-                steppers[i]->currentFrequency = steppers[i]->setFrequency;
+                nextFreq = targetFreq;
             }
-            else if (steppers[i]->setFrequency > (steppers[i]->currentFrequency + STEPPER_ACCEL))
+            else if (targetFreq > (steppers[i]->currentFrequency + STEPPER_ACCEL))
             {
-                steppers[i]->currentFrequency += STEPPER_ACCEL;
+                nextFreq = steppers[i]->currentFrequency + STEPPER_ACCEL;
             }
-            else if (steppers[i]->setFrequency < (steppers[i]->currentFrequency - STEPPER_DECEL))
+            else if (targetFreq < (steppers[i]->currentFrequency - STEPPER_DECEL))
             {
-                steppers[i]->currentFrequency -= STEPPER_DECEL;
+                nextFreq = steppers[i]->currentFrequency - STEPPER_DECEL;
             }
             else
             {
-                steppers[i]->currentFrequency = steppers[i]->setFrequency;
+                nextFreq = targetFreq;
             }
+
+            steppers[i]->currentFrequency = nextFreq;
 
             if (steppers[i]->currentFrequency == 0 && steppers[i]->setDirection != DIR_RETAIN)
             {

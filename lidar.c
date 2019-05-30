@@ -9,6 +9,7 @@ LidarDriver LIDARD1;
 static void lidarRxEnd(UARTDriver *uartp);
 static uint8_t rxBuf[42];
 event_source_t lidarEvent;
+static bool lidarRunning = false;
 
 static UARTConfig lidarConfig =
 {
@@ -48,27 +49,26 @@ static THD_FUNCTION(lidarThread, arg)
 
         if (rxBuf[0] == 0xFA) // SYNC
         {
-            if (rxBuf[1] == 0xA0) // Angle index 0
+            uint8_t index = rxBuf[1] - 0xA0;
+
+            if (index == 0x00) // Angle index 0
             {
                 palToggleLine(LINE_LED_DEBUG);
+            }
 
-                LIDARD1.distance[0] = (rxBuf[7] << 8) | rxBuf[6];
-            }
-            if (rxBuf[1] == 0xAF) // Angle index 15
-            {
-                LIDARD1.distance[1] = (rxBuf[7] << 8) | rxBuf[6];
-            }
-            if (rxBuf[1] == 0xBE) // Angle index 30
-            {
-                LIDARD1.distance[2] = (rxBuf[7] << 8) | rxBuf[6];
-            }
-            if (rxBuf[1] == 0xCD) // Angle index 45
-            {
-                LIDARD1.distance[3] = (rxBuf[7] << 8) | rxBuf[6];
-            }
+            uint16_t intensity = (rxBuf[5] << 8) | rxBuf[4];
+            uint16_t distance = (rxBuf[7] << 8) | rxBuf[6];
+
+            LIDARD1.intensity[index] = intensity;
+
+            if (intensity > 10)
+                LIDARD1.distance[index] = distance;
+            else
+                LIDARD1.distance[index] = 0xffff;
         }
 
-        uartStartReceive(&UARTD1, 42, rxBuf);
+        if (lidarRunning)
+            uartStartReceive(&UARTD1, 42, rxBuf);
     }
 
     chThdExit(MSG_OK);
@@ -84,14 +84,22 @@ void controlLidar(bool enable)
         buf[0] = 'e';
 
     lidarTransmit(1, buf);
+
+    if (enable)
+        uartStartReceive(&UARTD1, 42, rxBuf);
+    else
+        uartStopReceive(&UARTD1);
+
+    lidarRunning = enable;
 }
 
 void initLidar(void)
 {
-    LIDARD1.distance[0] = 0xffff;
-    LIDARD1.distance[1] = 0xffff;
-    LIDARD1.distance[2] = 0xffff;
-    LIDARD1.distance[3] = 0xffff;
+    for (int i=0 ; i < 60 ; i++)
+    {
+        LIDARD1.intensity[i] = 0x0;
+        LIDARD1.distance[i] = 0xffff;
+    }
 
     uartStart(&UARTD1, &lidarConfig);
 
@@ -99,6 +107,21 @@ void initLidar(void)
 
     chThdCreateFromHeap(NULL, THD_WORKING_AREA_SIZE(2048), "lidar", NORMALPRIO+1, lidarThread, NULL);
 
-    uartStartReceive(&UARTD1, 42, rxBuf);
 }
 
+int shortestBearingBetween(uint8_t min, uint8_t max)
+{
+    int ret = -1;
+    int shortest = 0xffff;
+
+    for (int i = min ; i<max ; i++)
+    {
+        if (LIDARD1.distance[i] < shortest)
+        {
+            ret = i;
+            shortest = LIDARD1.distance[i];
+        }
+    }
+
+    return ret;
+}
